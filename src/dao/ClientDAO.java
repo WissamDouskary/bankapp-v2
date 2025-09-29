@@ -1,5 +1,13 @@
 package dao;
 
+import entities.Client;
+
+import java.util.List;
+
 public interface ClientDAO {
-    public void create();
+    void save(Client client);
+    void update(Client client);
+    void delete(String id);
+    Client findById(String id);
+    List<Client> findAll();
 }
