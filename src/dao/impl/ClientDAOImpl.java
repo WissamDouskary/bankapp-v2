@@ -107,4 +107,28 @@ public class ClientDAOImpl implements ClientDAO {
         }
         return clients;
     }
+
+    public Client findbyName(String nom){
+        String sql = "SELECT * FROM client WHERE nom = ?";
+        Client clientParNom = null;
+
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, nom);
+
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    clientParNom = new Client(
+                            rs.getString("id"),
+                            rs.getString("nom"),
+                            rs.getString("email")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while finding client by id: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return clientParNom;
+    }
 }

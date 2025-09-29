@@ -31,4 +31,18 @@ public class ClientService {
         if(clientDAOImpl.findById(id) == null){System.out.println("There is No Client with this id!");}
         return clientDAOImpl.findById(id);
     }
+
+    public Client findByIdOrNom(String searchTerm) {
+        Client client = clientDAOImpl.findById(searchTerm);
+        if (client != null) {
+            return client;
+        }
+
+        client = clientDAOImpl.findbyName(searchTerm);
+        if (client != null) {
+            return client;
+        }
+
+        return null;
+    }
 }

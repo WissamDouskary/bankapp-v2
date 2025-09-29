@@ -58,7 +58,7 @@ public class Menu {
             case 1 -> saveClient();
             case 2 -> modifyClient();
             case 3 -> deleteClient();
-            case 4 -> System.out.println("[Rechercher un client par ID]");
+            case 4 -> clientByIdOrNom();
             case 5 -> System.out.println("[Rechercher un client par Nom]");
             case 6 -> System.out.println("[Lister tous les clients]");
             case 0 -> System.out.println("Retour au menu principal");
@@ -239,5 +239,19 @@ public class Menu {
             return;
         }
         clientService.deleteClient(id);
+    }
+
+    static void clientByIdOrNom(){
+        System.out.println("Entrer le nom ou id du client :");
+        String searchTerm = scanner.nextLine();
+
+        Client client = clientService.findByIdOrNom(searchTerm);
+
+        if(client == null){
+            System.out.println("Aucun client avec cette id ou ce nom");
+            return;
+        }
+        System.out.println("Client found: ===========");
+        System.out.println(client);
     }
 }
