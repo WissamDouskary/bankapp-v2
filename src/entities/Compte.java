@@ -1,4 +1,3 @@
 package entities;
 
-public class Compte {
-}
+public sealed abstract class Compte permits CompteCourant, CompteEpargne {}
