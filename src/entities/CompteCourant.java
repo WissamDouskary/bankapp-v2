@@ -1,7 +1,5 @@
 package entities;
 
-import entities.enums.TransactionType;
-
 public final class CompteCourant extends Compte {
 
     private double decouvertAutorise = 1000;

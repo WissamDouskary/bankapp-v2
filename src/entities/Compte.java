@@ -1,7 +1,5 @@
 package entities;
 
-import entities.enums.TransactionType;
-
 import java.util.UUID;
 
 public sealed abstract class Compte permits CompteCourant, CompteEpargne {
