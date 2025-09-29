@@ -13,4 +13,9 @@ public record Client(String id, String nom, String email) {
     public Client(String nom, String email){
         this(UUID.randomUUID().toString(), nom, email);
     }
+
+    @Override
+    public String toString() {
+        return "ID = " + id() + " | nom = "+nom()+" | email = "+email();
+    }
 }

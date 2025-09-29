@@ -1,15 +1,22 @@
 package ui;
 
+import entities.Client;
+import service.ClientService;
+import util.NomberChecker;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
 
-    private final Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
+    private static NomberChecker nomberChecker = new NomberChecker();
+    private static ClientService clientService = new ClientService();
 
     public void afficherMenuPrincipal() {
         int choix;
         do {
-            System.out.println("\n===== BANQUE AL BARAKA - ANALYSE DES TRANSACTIONS =====");
+            System.out.println("\n===== BANQUE MENU =====");
             System.out.println("1. Gestion des clients");
             System.out.println("2. Gestion des comptes");
             System.out.println("3. Gestion des transactions");
@@ -18,16 +25,16 @@ public class Menu {
             System.out.println("0. Quitter");
             System.out.print("Votre choix: ");
 
-            choix = lireEntier();
-
+            choix = nomberChecker.lireEntier(scanner);
+            scanner.nextLine();
             switch (choix) {
                 case 1 -> menuClients();
                 case 2 -> menuComptes();
                 case 3 -> menuTransactions();
                 case 4 -> menuAnalyses();
                 case 5 -> menuAlertes();
-                case 0 -> System.out.println("✅ Merci d’avoir utilisé l’application.");
-                default -> System.out.println("⚠️ Choix invalide, réessayez.");
+                case 0 -> System.out.println("Merci d’avoir utilisé l’application.");
+                default -> System.out.println("Choix invalide, réessayez.");
             }
 
         } while (choix != 0);
@@ -44,18 +51,18 @@ public class Menu {
         System.out.println("6. Lister tous les clients");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
-        int choix = lireEntier();
-
+        int choix = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
         // Placeholder pour les actions
         switch (choix) {
-            case 1 -> System.out.println("[Ajouter un client]");
-            case 2 -> System.out.println("[Modifier un client]");
-            case 3 -> System.out.println("[Supprimer un client]");
+            case 1 -> saveClient();
+            case 2 -> modifyClient();
+            case 3 -> deleteClient();
             case 4 -> System.out.println("[Rechercher un client par ID]");
             case 5 -> System.out.println("[Rechercher un client par Nom]");
             case 6 -> System.out.println("[Lister tous les clients]");
             case 0 -> System.out.println("Retour au menu principal");
-            default -> System.out.println("⚠️ Choix invalide.");
+            default -> System.out.println("Choix invalide.");
         }
     }
 
@@ -68,7 +75,7 @@ public class Menu {
         System.out.println("4. Compte avec solde max / min");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
-        int choix = lireEntier();
+        int choix = nomberChecker.lireEntier(scanner);
 
         switch (choix) {
             case 1 -> System.out.println("[Créer un compte]");
@@ -76,7 +83,7 @@ public class Menu {
             case 3 -> System.out.println("[Rechercher comptes]");
             case 4 -> System.out.println("[Compte avec solde max/min]");
             case 0 -> System.out.println("Retour au menu principal");
-            default -> System.out.println("⚠️ Choix invalide.");
+            default -> System.out.println("Choix invalide.");
         }
     }
 
@@ -93,7 +100,7 @@ public class Menu {
         System.out.println("8. Détecter transactions suspectes");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
-        int choix = lireEntier();
+        int choix = nomberChecker.lireEntier(scanner);
 
         switch (choix) {
             case 1 -> System.out.println("[Versement - Émettre un dépôt sur un compte]");
@@ -118,7 +125,7 @@ public class Menu {
         System.out.println("4. Transactions suspectes");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
-        int choix = lireEntier();
+        int choix = nomberChecker.lireEntier(scanner);
 
         switch (choix) {
             case 1 -> System.out.println("[Top 5 clients par solde]");
@@ -126,7 +133,7 @@ public class Menu {
             case 3 -> System.out.println("[Comptes inactifs]");
             case 4 -> System.out.println("[Transactions suspectes]");
             case 0 -> System.out.println("Retour au menu principal");
-            default -> System.out.println("⚠️ Choix invalide.");
+            default -> System.out.println("Choix invalide.");
         }
     }
 
@@ -137,22 +144,100 @@ public class Menu {
         System.out.println("2. Inactivité prolongée");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
-        int choix = lireEntier();
+        int choix = nomberChecker.lireEntier(scanner);
 
         switch (choix) {
             case 1 -> System.out.println("[Alerte solde bas]");
             case 2 -> System.out.println("[Alerte inactivité prolongée]");
             case 0 -> System.out.println("Retour au menu principal");
-            default -> System.out.println("⚠️ Choix invalide.");
+            default -> System.out.println("Choix invalide.");
         }
     }
 
-    // ====================== Utilitaire ======================
-    private int lireEntier() {
-        while (!scanner.hasNextInt()) {
-            System.out.println("⚠️ Entrée invalide, veuillez saisir un nombre.");
-            scanner.next();
+    // client methods
+    static void saveClient() {
+        String nom;
+        do {
+            System.out.print("Entrer client nom : ");
+            nom = scanner.nextLine().trim();
+            if (nom.isEmpty()) {
+                System.out.println("Le nom ne peut pas être vide !");
+            }
+        } while (nom.isEmpty());
+
+        String email;
+        do {
+            System.out.print("Entrer client email : ");
+            email = scanner.nextLine().trim();
+            if (email.isEmpty()) {
+                System.out.println("L'email ne peut pas être vide !");
+            }
+        } while (email.isEmpty());
+
+        Client client = new Client(nom, email);
+        System.out.println(clientService.createClient(client));
+    }
+
+    static void modifyClient() {
+        List<Client> clientList = clientService.listAllClients();
+        System.out.println("Modification du client informations =============\n");
+        System.out.println("Client List ============================================================");
+        clientList.forEach(System.out::println);
+        System.out.println("========================================================================");
+
+        System.out.print("Entrer l'ID du client que tu veux modifier: ");
+        String ID = scanner.nextLine();
+
+        Client client = clientService.findById(ID);
+        if (client == null) {
+            System.out.println("Aucun account avec ce id!");
+            return;
         }
-        return scanner.nextInt();
+
+        String nom = client.nom();
+        String email = client.email();
+
+        while (true) {
+            System.out.println("1. Modifier le nom");
+            System.out.println("2. Modifier l'email");
+            System.out.println("0. Save modifications");
+            System.out.print("Choix: ");
+
+            int choix = nomberChecker.lireEntier(scanner);
+            scanner.nextLine();
+
+            switch (choix) {
+                case 1 -> {
+                    System.out.print("Entrer le nouveau nom: ");
+                    nom = scanner.nextLine();
+                }
+                case 2 -> {
+                    System.out.print("Entrer le nouveau email: ");
+                    email = scanner.nextLine();
+                }
+                case 0 -> {
+                    client = new Client(ID, nom, email);
+                    clientService.updateClient(client);
+                    return;
+                }
+                default -> System.out.println("Sélection invalide!");
+            }
+        }
+    }
+
+    static void deleteClient(){
+        List<Client> clientList = clientService.listAllClients();
+        System.out.println("Deletion du client informations =============\n");
+        System.out.println("Client List ============================================================");
+        clientList.forEach(System.out::println);
+        System.out.println("========================================================================");
+
+        System.out.println("Entrer ID du client :");
+        String id = scanner.nextLine();
+        if(clientService.findById(id) == null){
+            System.out.println("Aucun client avec cette id!");
+            return;
+        }
+        clientService.deleteClient(id);
     }
 }
