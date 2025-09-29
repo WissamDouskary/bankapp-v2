@@ -46,9 +46,8 @@ public class Menu {
         System.out.println("1. Ajouter un client");
         System.out.println("2. Modifier un client");
         System.out.println("3. Supprimer un client");
-        System.out.println("4. Rechercher un client par ID");
-        System.out.println("5. Rechercher un client par Nom");
-        System.out.println("6. Lister tous les clients");
+        System.out.println("4. Rechercher un client par ID ou Nom");
+        System.out.println("5. Lister tous les clients");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
         int choix = nomberChecker.lireEntier(scanner);
@@ -59,8 +58,7 @@ public class Menu {
             case 2 -> modifyClient();
             case 3 -> deleteClient();
             case 4 -> clientByIdOrNom();
-            case 5 -> System.out.println("[Rechercher un client par Nom]");
-            case 6 -> System.out.println("[Lister tous les clients]");
+            case 5 -> getAllClients();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
         }
@@ -253,5 +251,12 @@ public class Menu {
         }
         System.out.println("Client found: ===========");
         System.out.println(client);
+    }
+
+    static void getAllClients(){
+        List<Client> clientList = clientService.listAllClients();
+        System.out.println("Client List ============================================================");
+        clientList.forEach(System.out::println);
+        System.out.println("========================================================================");
     }
 }
