@@ -9,6 +9,11 @@ public final class CompteEpargne extends Compte {
         this.tauxInteret = tauxInteret;
     }
 
+    public CompteEpargne(String id, String idClient, int numero, double solde, double tauxInteret) {
+        super(id, idClient, numero, solde, "EPARGNE");
+        this.tauxInteret = tauxInteret;
+    }
+
     public void appliquerInteret() {
         double interet = getSolde() * tauxInteret / 100;
         setSolde(getSolde() + interet);

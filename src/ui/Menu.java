@@ -8,9 +8,7 @@ import service.ClientService;
 import service.CompteService;
 import util.NomberChecker;
 
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Menu {
 
@@ -85,7 +83,7 @@ public class Menu {
 
         switch (choix) {
             case 1 -> createAccount();
-            case 2 -> System.out.println("[Mettre à jour un compte]");
+            case 2 -> updateAccount();
             case 3 -> System.out.println("[Rechercher comptes]");
             case 4 -> System.out.println("[Compte avec solde max/min]");
             case 0 -> System.out.println("Retour au menu principal");
@@ -337,7 +335,123 @@ public class Menu {
         System.out.println("votre numero de compte : "+numero);
     }
 
-    static void updateAccount(){
+    static void updateAccount() {
+        List<Compte> comptes = compteService.findAll();
 
+        System.out.println("Comptes List ===========================");
+        comptes.forEach(System.out::println);
+        System.out.println("===========================");
+        System.out.println("Entrer id de compte :");
+        String id = scanner.nextLine();
+
+        Compte compte = compteService.findById(id);
+
+        if (compte == null) {
+            System.out.println("Aucun compte avec cette id!");
+            return;
+        }
+
+        System.out.println("Account found!");
+
+        double solde = compte.getSolde();
+        String type = compte.getTypeCompte();
+        Double decouvert = null;
+        Double tauxInteret = null;
+
+        if (compte instanceof CompteCourant) {
+            decouvert = ((CompteCourant) compte).getDecouvertAutorise();
+        } else if (compte instanceof CompteEpargne) {
+            tauxInteret = ((CompteEpargne) compte).getTauxInteret();
+        }
+
+        while (true) {
+            System.out.println("\nActuellement Account type : " + type);
+            System.out.println("Solde actuel: " + solde);
+
+            if (type.equals("COURANT")) {
+                System.out.println("Découvert autorisé: " + decouvert);
+            } else {
+                System.out.println("Taux d'intérêt: " + tauxInteret);
+            }
+
+            System.out.println("\nMenu:");
+            System.out.println("1. Modifier solde");
+            System.out.println("2. Modifier Account type");
+            if (type.equals("COURANT")) {
+                System.out.println("3. Modifier Découvert");
+            } else {
+                System.out.println("3. Modifier Taux d'intérêt");
+            }
+            System.out.println("0. Save changes");
+
+            int choix = nomberChecker.lireEntier(scanner);
+            scanner.nextLine();
+
+            switch (choix) {
+                case 1 -> {
+                    System.out.println("Entrer le nouveau solde: ");
+                    solde = scanner.nextDouble();
+                    scanner.nextLine();
+                    if (solde <= 0) {
+                        System.out.println("Solde doit être positif!");
+                    }
+                }
+                case 2 -> {
+                    System.out.println("Entrer le nouveau Account type: ");
+                    System.out.println("1. COURANT");
+                    System.out.println("2. EPARGNE");
+
+                    int typeChoix = nomberChecker.lireEntier(scanner);
+                    scanner.nextLine();
+
+                    if (typeChoix == 1) {
+                        type = "COURANT";
+                        System.out.println("Entrer le découvert autorisé :");
+                        decouvert = scanner.nextDouble();
+                        scanner.nextLine();
+
+                        tauxInteret = null;
+                    } else if (typeChoix == 2) {
+                        type = "EPARGNE";
+                        System.out.println("Entrer le taux d'intérêt :");
+                        tauxInteret = scanner.nextDouble();
+                        scanner.nextLine();
+
+                        decouvert = null;
+                    } else {
+                        System.out.println("Type invalide");
+                    }
+                }
+                case 3 -> {
+                    if (type.equals("COURANT")) {
+                        System.out.println("Entrer le nouveau découvert :");
+                        decouvert = scanner.nextDouble();
+                        scanner.nextLine();
+                        if (decouvert <= 0) {
+                            System.out.println("Découvert doit être positif!");
+                        }
+                    } else if (type.equals("EPARGNE")) {
+                        System.out.println("Entrer le nouveau taux d'intérêt :");
+                        tauxInteret = scanner.nextDouble();
+                        scanner.nextLine();
+                        if (tauxInteret <= 0) {
+                            System.out.println("Taux d'intérêt doit être positif!");
+                        }
+                    }
+                }
+                case 0 -> {
+                    if (type.equals("COURANT")) {
+                        compte = new CompteCourant(compte.getId(), compte.getIdClient(), compte.getNumero(), solde, decouvert);
+                    } else {
+                        compte = new CompteEpargne(compte.getId(), compte.getIdClient(), compte.getNumero(), solde, tauxInteret);
+                    }
+                    compteService.updateCompte(compte);
+                    System.out.println("Compte modifié avec succès!");
+                    return;
+                }
+                default -> System.out.println("Sélection invalide.");
+            }
+        }
     }
+
 }

@@ -5,6 +5,8 @@ import entities.Compte;
 import entities.CompteCourant;
 import entities.CompteEpargne;
 
+import java.util.List;
+
 public class CompteService {
     private CompteDAOImpl compteDaoImpl = new CompteDAOImpl();
 
@@ -23,12 +25,20 @@ public class CompteService {
     public void updateCompte(Compte compte){
         if(compte.getTypeCompte().equals("COURANT") && compte instanceof CompteCourant){
             CompteCourant compteCourant = (CompteCourant) compte;
-            Compte compte1 = new CompteCourant(compte.getIdClient(), compte.getNumero(), compte.getSolde(), compteCourant.getDecouvertAutorise());
+            Compte compte1 = new CompteCourant(compte.getId(), compte.getIdClient(), compte.getNumero(), compte.getSolde(), compteCourant.getDecouvertAutorise());
             compteDaoImpl.update(compte1);
         }else{
             CompteEpargne compteEpargne = (CompteEpargne) compte;
-            Compte compte2 = new CompteEpargne(compte.getIdClient(), compte.getNumero(), compte.getSolde(), compteEpargne.getTauxInteret());
+            Compte compte2 = new CompteEpargne(compte.getId(), compte.getIdClient(), compte.getNumero(), compte.getSolde(), compteEpargne.getTauxInteret());
             compteDaoImpl.update(compte2);
         }
+    }
+
+    public Compte findById(String id){
+        return compteDaoImpl.findById(id);
+    }
+
+    public List<Compte> findAll(){
+        return compteDaoImpl.findAllComptes();
     }
 }

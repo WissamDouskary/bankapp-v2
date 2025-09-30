@@ -17,6 +17,14 @@ public sealed abstract class Compte permits CompteCourant, CompteEpargne {
         this.typeCompte = typeCompte;
     }
 
+    public Compte(String id, String idClient, int numero, double solde, String typeCompte){
+        this.id = id;
+        this.idClient = idClient;
+        this.numero = numero;
+        this.solde = solde;
+        this.typeCompte = typeCompte;
+    }
+
     public String getId() {
         return id;
     }
@@ -55,5 +63,15 @@ public sealed abstract class Compte permits CompteCourant, CompteEpargne {
 
     public void setTypeCompte(String typeCompte) {
         this.typeCompte = typeCompte;
+    }
+
+    @Override
+    public String toString() {
+        return "id = '" + getId() + '\'' +
+                ", numero = " + getNumero() +
+                ", solde = " + getSolde() +
+                ", idClient = '" + getIdClient() + '\'' +
+                ", typeCompte = '" + getTypeCompte() + '\''
+                ;
     }
 }

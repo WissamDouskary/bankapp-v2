@@ -9,5 +9,6 @@ public interface CompteDAO {
     void update(Compte compte);
     void delete(String id);
     Compte findById(String id);
+    List<Compte> findAllComptes();
     List<Compte> findByClient(String idClient);
 }
