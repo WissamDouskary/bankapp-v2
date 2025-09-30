@@ -11,4 +11,5 @@ public interface CompteDAO {
     Compte findById(String id);
     List<Compte> findAllComptes();
     List<Compte> findByClient(String idClient);
+    Compte findByNumero(String numero);
 }

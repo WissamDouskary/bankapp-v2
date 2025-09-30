@@ -125,4 +125,9 @@ public class CompteDAOImpl implements CompteDAO {
     public List<Compte> findByClient(String idClient) {
         return List.of();
     }
+
+    @Override
+    public Compte findByNumero(String numero) {
+        return null;
+    }
 }

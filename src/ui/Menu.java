@@ -84,7 +84,7 @@ public class Menu {
         switch (choix) {
             case 1 -> createAccount();
             case 2 -> updateAccount();
-            case 3 -> System.out.println("[Rechercher comptes]");
+            case 3 -> findByClientIdOrNumber();
             case 4 -> System.out.println("[Compte avec solde max/min]");
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
@@ -440,9 +440,9 @@ public class Menu {
                     }
                 }
                 case 0 -> {
-                    if (type.equals("COURANT")) {
+                    if (type.equals("COURANT") && decouvert != null) {
                         compte = new CompteCourant(compte.getId(), compte.getIdClient(), compte.getNumero(), solde, decouvert);
-                    } else {
+                    } else if(tauxInteret != null){
                         compte = new CompteEpargne(compte.getId(), compte.getIdClient(), compte.getNumero(), solde, tauxInteret);
                     }
                     compteService.updateCompte(compte);
@@ -454,4 +454,27 @@ public class Menu {
         }
     }
 
+    static void findByClientIdOrNumber() {
+        System.out.println("Entrer le client id ou le numero de compte :");
+        String searchTerm = scanner.nextLine();
+
+        if (!compteService.findByClientId(searchTerm).isEmpty()) {
+            System.out.println("Found accounts by client ID.");
+            System.out.println("===========================================");
+            compteService.findByClientId(searchTerm).forEach(System.out::println);
+            System.out.println("===========================================");
+        } else {
+            try {
+                int numero = Integer.parseInt(searchTerm);
+                if (compteService.findByNumero(numero) != null) {
+                    System.out.println("Found account by account number.");
+                    System.out.println(compteService.findByNumero(numero));
+                } else {
+                    System.out.println("No account found with this client ID or account number.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid account number format.");
+            }
+        }
+    }
 }

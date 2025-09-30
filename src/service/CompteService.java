@@ -6,6 +6,7 @@ import entities.CompteCourant;
 import entities.CompteEpargne;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompteService {
     private CompteDAOImpl compteDaoImpl = new CompteDAOImpl();
@@ -40,5 +41,25 @@ public class CompteService {
 
     public List<Compte> findAll(){
         return compteDaoImpl.findAllComptes();
+    }
+
+    public List<Compte> findByClientId(String searchTerm){
+        List<Compte> comptes = findAll();
+
+        return comptes.stream()
+                .filter(e -> e.getIdClient().equals(searchTerm))
+                .toList();
+    }
+
+    public Compte findByNumero(int searchTerm){
+        List<Compte> comptes = findAll();
+        Compte compte = null;
+
+        compte = comptes.stream()
+                .filter(e -> e.getNumero() == searchTerm)
+                .findFirst()
+                .orElse(null);
+
+        return compte;
     }
 }
