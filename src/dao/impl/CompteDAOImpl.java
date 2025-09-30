@@ -30,10 +30,10 @@ public class CompteDAOImpl implements CompteDAO {
             if(compte instanceof CompteCourant){
                 CompteCourant compteCourant = (CompteCourant) compte;
                 st.setDouble(6, compteCourant.getDecouvertAutorise());
-                st.setObject(7, null, Types.NULL);
+                st.setNull(7, Types.DOUBLE);
             }else if (compte instanceof CompteEpargne){
                 CompteEpargne compteEpargne = (CompteEpargne) compte;
-                st.setObject(6, null, Types.NULL);
+                st.setNull(6, Types.DOUBLE);
                 st.setDouble(7, compteEpargne.getTauxInteret());
             }
 
@@ -47,7 +47,29 @@ public class CompteDAOImpl implements CompteDAO {
 
     @Override
     public void update(Compte compte) {
+        String sql = "UPDATE compte SET solde = ? , decouvertautorise = ? , tauxinteret = ? , typecompte = ? WHERE id = ?";
 
+        try(PreparedStatement st = conn.prepareStatement(sql)){
+            st.setDouble(1, compte.getSolde());
+            st.setString(4, compte.getTypeCompte());
+            st.setString(5, compte.getId());
+
+            if(compte instanceof CompteCourant){
+                CompteCourant compteCourant = (CompteCourant) compte;
+                st.setDouble(2, compteCourant.getDecouvertAutorise());
+                st.setNull(3, Types.DOUBLE);
+            }else if(compte instanceof CompteEpargne){
+                CompteEpargne compteEpargne = (CompteEpargne) compte;
+                st.setNull(2, Types.DOUBLE);
+                st.setDouble(3, compteEpargne.getTauxInteret());
+            }
+
+            st.executeUpdate();
+        }
+        catch (SQLException e){
+            System.out.println("There is an error while update compte :" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override

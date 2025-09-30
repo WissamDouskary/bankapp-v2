@@ -19,4 +19,16 @@ public class CompteService {
             compteDaoImpl.save(compteCourant);
         }
     }
+
+    public void updateCompte(Compte compte){
+        if(compte.getTypeCompte().equals("COURANT") && compte instanceof CompteCourant){
+            CompteCourant compteCourant = (CompteCourant) compte;
+            Compte compte1 = new CompteCourant(compte.getIdClient(), compte.getNumero(), compte.getSolde(), compteCourant.getDecouvertAutorise());
+            compteDaoImpl.update(compte1);
+        }else{
+            CompteEpargne compteEpargne = (CompteEpargne) compte;
+            Compte compte2 = new CompteEpargne(compte.getIdClient(), compte.getNumero(), compte.getSolde(), compteEpargne.getTauxInteret());
+            compteDaoImpl.update(compte2);
+        }
+    }
 }

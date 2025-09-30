@@ -9,6 +9,7 @@ import service.CompteService;
 import util.NomberChecker;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Menu {
@@ -270,9 +271,8 @@ public class Menu {
 
     //comptes methods
     static void createAccount(){
-        System.out.println("Entrer un numero :");
-        int numero = scanner.nextInt();
-        scanner.nextLine();
+        Random random = new Random();
+        int numero = random.nextInt(Integer.MAX_VALUE);
 
         System.out.println("Entrer init solde :");
         double solde = scanner.nextDouble();
@@ -333,5 +333,11 @@ public class Menu {
         }
 
         compteService.createCompte(compte);
+        System.out.println("Compte crée avec sucess");
+        System.out.println("votre numero de compte : "+numero);
+    }
+
+    static void updateAccount(){
+
     }
 }
