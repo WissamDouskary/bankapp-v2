@@ -4,14 +4,12 @@ import java.util.UUID;
 
 public sealed abstract class Compte permits CompteCourant, CompteEpargne {
     private String id;
-    private String numero;
+    private int numero;
     private double solde;
     private String idClient;
     private String typeCompte;
-    private double decouvertAutoriser;
-    private double tauxInteret;
 
-    public Compte(String idClient, String numero, double solde, String typeCompte) {
+    public Compte(String idClient, int numero, double solde, String typeCompte) {
         this.id = UUID.randomUUID().toString();
         this.idClient = idClient;
         this.numero = numero;
@@ -19,7 +17,43 @@ public sealed abstract class Compte permits CompteCourant, CompteEpargne {
         this.typeCompte = typeCompte;
     }
 
-    public double getSolde() { return solde; }
-    public void setSolde(double solde) { this.solde = solde; }
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public double getSolde() {
+        return solde;
+    }
+
+    public void setSolde(double solde) {
+        this.solde = solde;
+    }
+
+    public String getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(String idClient) {
+        this.idClient = idClient;
+    }
+
+    public String getTypeCompte() {
+        return typeCompte;
+    }
+
+    public void setTypeCompte(String typeCompte) {
+        this.typeCompte = typeCompte;
+    }
 }

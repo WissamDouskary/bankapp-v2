@@ -1,7 +1,11 @@
 package ui;
 
 import entities.Client;
+import entities.Compte;
+import entities.CompteCourant;
+import entities.CompteEpargne;
 import service.ClientService;
+import service.CompteService;
 import util.NomberChecker;
 
 import java.util.List;
@@ -12,6 +16,7 @@ public class Menu {
     private static Scanner scanner = new Scanner(System.in);
     private static NomberChecker nomberChecker = new NomberChecker();
     private static ClientService clientService = new ClientService();
+    private static CompteService compteService = new CompteService();
 
     public void afficherMenuPrincipal() {
         int choix;
@@ -73,10 +78,12 @@ public class Menu {
         System.out.println("4. Compte avec solde max / min");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
+
         int choix = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
 
         switch (choix) {
-            case 1 -> System.out.println("[Créer un compte]");
+            case 1 -> createAccount();
             case 2 -> System.out.println("[Mettre à jour un compte]");
             case 3 -> System.out.println("[Rechercher comptes]");
             case 4 -> System.out.println("[Compte avec solde max/min]");
@@ -258,5 +265,73 @@ public class Menu {
         System.out.println("Client List ============================================================");
         clientList.forEach(System.out::println);
         System.out.println("========================================================================");
+    }
+
+
+    //comptes methods
+    static void createAccount(){
+        System.out.println("Entrer un numero :");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Entrer init solde :");
+        double solde = scanner.nextDouble();
+        if(solde <= 0){
+            System.out.println("Solde est negative!");
+            return;
+        }
+        scanner.nextLine();
+        getAllClients();
+
+        System.out.println("Entrer client id: ");
+        String clientId = scanner.nextLine();
+
+        if(clientService.findById(clientId) == null){
+            return;
+        }
+
+        System.out.println("Entrer compte type: ");
+        System.out.println("1. Courant");
+        System.out.println("2. Epargne");
+        System.out.println("Choix");
+
+        int choix = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
+
+        String type = null;
+        double decouvert = 0;
+        double tauxInteret = 0;
+        Compte compte = null;
+
+        do{
+            if(choix == 1){
+                type = "COURANT";
+            }else if (choix == 2){
+                type = "EPARGNE";
+            }else{
+                System.out.println("Invalid selection");
+            }
+        }
+        while (type == null);
+
+        if(choix == 1){
+            System.out.println("Entrer le montant de decouvert: ");
+            decouvert = scanner.nextDouble();
+            if(decouvert <= 0){
+                System.out.println("Entrer une valide nomber > 0");
+                return;
+            }
+            compte = new CompteCourant(clientId, numero, solde, decouvert);
+        } else {
+            System.out.println("Entrer le taux d'interet (0,04 est 4%): ");
+            tauxInteret = scanner.nextDouble();
+            if(tauxInteret < 0){
+                System.out.println("Entrer une valide nomber > 0");
+                return;
+            }
+            compte = new CompteEpargne(clientId, numero, solde, tauxInteret);
+        }
+
+        compteService.createCompte(compte);
     }
 }

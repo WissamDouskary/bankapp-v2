@@ -4,8 +4,16 @@ public final class CompteCourant extends Compte {
 
     private double decouvertAutorise = 1000;
 
-    public CompteCourant(String idClient, String numero, double solde, double decouvertAutorise) {
+    public CompteCourant(String idClient, int numero, double solde, double decouvertAutorise) {
         super(idClient, numero, solde, "COURANT");
+        this.decouvertAutorise = decouvertAutorise;
+    }
+
+    public double getDecouvertAutorise() {
+        return decouvertAutorise;
+    }
+
+    public void setDecouvertAutorise(double decouvertAutorise) {
         this.decouvertAutorise = decouvertAutorise;
     }
 }

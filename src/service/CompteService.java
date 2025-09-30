@@ -1,4 +1,22 @@
 package service;
 
+import dao.impl.CompteDAOImpl;
+import entities.Compte;
+import entities.CompteCourant;
+import entities.CompteEpargne;
+
 public class CompteService {
+    private CompteDAOImpl compteDaoImpl = new CompteDAOImpl();
+
+    public void createCompte(Compte compte){
+        if(compte.getTypeCompte().equals("COURANT") && compte instanceof CompteCourant){
+            CompteCourant compte1 = (CompteCourant) compte;
+            Compte compteCourant = new CompteCourant(compte1.getIdClient(), compte1.getNumero(), compte1.getSolde(), compte1.getDecouvertAutorise());
+            compteDaoImpl.save(compteCourant);
+        }else{
+            CompteEpargne compte2 = (CompteEpargne) compte;
+            Compte compteCourant = new CompteEpargne(compte2.getIdClient(), compte2.getNumero(), compte2.getSolde(), compte2.getTauxInteret());
+            compteDaoImpl.save(compteCourant);
+        }
+    }
 }
