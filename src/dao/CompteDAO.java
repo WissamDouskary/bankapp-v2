@@ -10,6 +10,4 @@ public interface CompteDAO {
     void delete(String id);
     Compte findById(String id);
     List<Compte> findAllComptes();
-    List<Compte> findByClient(String idClient);
-    Compte findByNumero(String numero);
 }

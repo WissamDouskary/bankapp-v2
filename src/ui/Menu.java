@@ -85,7 +85,7 @@ public class Menu {
             case 1 -> createAccount();
             case 2 -> updateAccount();
             case 3 -> findByClientIdOrNumber();
-            case 4 -> System.out.println("[Compte avec solde max/min]");
+            case 4 -> filterByMinAndMax();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
         }
@@ -475,6 +475,19 @@ public class Menu {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid account number format.");
             }
+        }
+    }
+
+    static void filterByMinAndMax(){
+        System.out.println("Max And Min solde Accounts: ===========================");
+        Map<String, Optional<Compte>> maxAndMin = new HashMap<>();
+        maxAndMin = compteService.findMaxAndMin();
+
+        for (String i : maxAndMin.keySet()) {
+            maxAndMin.get(i).ifPresent(compte -> {
+                System.out.println(i +" ================================");
+                System.out.println(compte);
+            });
         }
     }
 }

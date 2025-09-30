@@ -6,7 +6,6 @@ import entities.Compte;
 import entities.CompteCourant;
 import entities.CompteEpargne;
 
-import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,13 +120,4 @@ public class CompteDAOImpl implements CompteDAO {
         return comptes;
     }
 
-    @Override
-    public List<Compte> findByClient(String idClient) {
-        return List.of();
-    }
-
-    @Override
-    public Compte findByNumero(String numero) {
-        return null;
-    }
 }

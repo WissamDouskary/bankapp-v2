@@ -5,7 +5,7 @@ import entities.Compte;
 import entities.CompteCourant;
 import entities.CompteEpargne;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CompteService {
@@ -61,5 +61,22 @@ public class CompteService {
                 .orElse(null);
 
         return compte;
+    }
+
+    public Map<String, Optional<Compte>> findMaxAndMin(){
+        Map<String, Optional<Compte>> maxAndMin = new HashMap<>();
+        List<Compte> comptes = findAll();
+
+        Optional<Compte> maxCompte = comptes.stream()
+                .max(Comparator.comparingDouble(Compte::getSolde));
+
+        Optional<Compte> minCompte = comptes.stream()
+                .min(Comparator.comparingDouble(Compte::getSolde));
+                ;
+        if(!maxCompte.isEmpty() && !minCompte.isEmpty()){
+            maxAndMin.put("Max", maxCompte);
+            maxAndMin.put("Min", minCompte);
+        }
+        return maxAndMin;
     }
 }
