@@ -39,28 +39,19 @@ public class CompteService {
         return compteDaoImpl.findById(id);
     }
 
-    public List<Compte> findAll(){
+    public List<Compte> findAll() {
         return compteDaoImpl.findAllComptes();
     }
 
-    public List<Compte> findByClientId(String searchTerm){
-        List<Compte> comptes = findAll();
-
-        return comptes.stream()
-                .filter(e -> e.getIdClient().equals(searchTerm))
-                .toList();
+    public List<Compte> findByClientId(String clientId) {
+        return findAll().stream().filter(e -> e.getIdClient().equals(clientId)).toList();
     }
 
     public Compte findByNumero(int searchTerm){
-        List<Compte> comptes = findAll();
-        Compte compte = null;
-
-        compte = comptes.stream()
+        return findAll().stream()
                 .filter(e -> e.getNumero() == searchTerm)
                 .findFirst()
                 .orElse(null);
-
-        return compte;
     }
 
     public Map<String, Optional<Compte>> findMaxAndMin(){

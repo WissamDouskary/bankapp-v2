@@ -1,11 +1,10 @@
 package ui;
 
-import entities.Client;
-import entities.Compte;
-import entities.CompteCourant;
-import entities.CompteEpargne;
+import entities.*;
+import entities.enums.TransactionType;
 import service.ClientService;
 import service.CompteService;
+import service.TransactionService;
 import util.NomberChecker;
 
 import java.util.*;
@@ -16,6 +15,7 @@ public class Menu {
     private static NomberChecker nomberChecker = new NomberChecker();
     private static ClientService clientService = new ClientService();
     private static CompteService compteService = new CompteService();
+    private static TransactionService transactionService = new TransactionService();
 
     public void afficherMenuPrincipal() {
         int choix;
@@ -104,12 +104,14 @@ public class Menu {
         System.out.println("8. Détecter transactions suspectes");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
+
         int choix = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
 
         switch (choix) {
-            case 1 -> System.out.println("[Versement - Émettre un dépôt sur un compte]");
-            case 2 -> System.out.println("[Retrait - Retirer de l'argent d'un compte]");
-            case 3 -> System.out.println("[Virement - Transférer de l'argent vers un autre compte]");
+            case 1 -> versement();
+            case 2 -> retrait();
+            case 3 -> virement();
             case 4 -> System.out.println("[Lister les transactions]");
             case 5 -> System.out.println("[Filtrer les transactions]");
             case 6 -> System.out.println("[Regrouper transactions]");
@@ -489,5 +491,55 @@ public class Menu {
                 System.out.println(compte);
             });
         }
+    }
+
+    // transactions methods
+    static void versement(){
+        System.out.println("Entrer le numero de compte pour versement: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Entrer le montant :");
+        double montant = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Entrer le lieu");
+        String lieu = scanner.nextLine();
+
+        transactionService.viresement(numero, montant, lieu);
+    }
+
+    static void retrait() {
+        System.out.println("Entrer le numero de compte pour retrait: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Entrer le montant :");
+        double montant = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Entrer le lieu de transaction :");
+        String lieu = scanner.nextLine();
+
+        transactionService.retrait(numero, montant, lieu);
+    }
+
+    static void virement(){
+        System.out.println("Entrer le numero de sender :");
+        int senderNumero = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
+
+        System.out.println("Entrer le numero de reciever: ");
+        int recieverNumero = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
+
+        System.out.println("Entrer le montant :");
+        double montant = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Entrer le lieu: ");
+        String lieu = scanner.nextLine();
+
+        transactionService.virement(senderNumero, recieverNumero, montant, lieu);
     }
 }

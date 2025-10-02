@@ -23,26 +23,18 @@ public class ClientService {
         System.out.println("Client supprimer avec sucess");
     }
 
-    public List<Client> listAllClients(){
+    public List<Client> listAllClients() {
         return clientDAOImpl.findAll();
     }
 
-    public Client findById(String id){
-        if(clientDAOImpl.findById(id) == null){System.out.println("There is No Client with this id!");}
+    public Client findById(String id) {
         return clientDAOImpl.findById(id);
     }
 
     public Client findByIdOrNom(String searchTerm) {
         Client client = clientDAOImpl.findById(searchTerm);
-        if (client != null) {
-            return client;
-        }
+        if (client != null) return client;
 
-        client = clientDAOImpl.findbyName(searchTerm);
-        if (client != null) {
-            return client;
-        }
-
-        return null;
+        return clientDAOImpl.findbyName(searchTerm);
     }
 }
