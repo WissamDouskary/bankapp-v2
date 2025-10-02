@@ -131,6 +131,7 @@ public class Menu {
         System.out.println("1. Top 5 clients par solde");
         System.out.println("2. Rapport mensuel (transactions par type et volume total)");
         System.out.println("3. Comptes inactifs");
+        System.out.println("4. information generale");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
         int choix = nomberChecker.lireEntier(scanner);
@@ -139,6 +140,7 @@ public class Menu {
             case 1 -> top5clientParSolde();
 //            case 2 -> rapportMonsuel();
 //            case 3 -> comptesInactifs();
+            case 4 -> rapportService.informationsGenerales();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
         }
