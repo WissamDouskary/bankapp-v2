@@ -8,6 +8,8 @@ import entities.CompteEpargne;
 import entities.Transaction;
 import entities.enums.TransactionType;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public class TransactionService {
@@ -127,5 +129,19 @@ public class TransactionService {
         createTransaction(transaction);
 
         System.out.println("Le virement fait avec succes");
+    }
+
+    public List<Transaction> listTransactionsByCompte(String idCompte) {
+        return transactionDAOImpl.findByCompte(idCompte)
+                .stream()
+                .sorted(Comparator.comparing(Transaction::date))
+                .toList();
+    }
+
+    public List<Transaction> listTransactionsByClient(String idClient) {
+        return transactionDAOImpl.findByIdClient(idClient)
+                .stream()
+                .sorted(Comparator.comparing(Transaction::date).reversed())
+                .toList();
     }
 }

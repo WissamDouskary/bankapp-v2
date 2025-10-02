@@ -2,11 +2,15 @@ package dao.impl;
 
 import config.DBConnection;
 import dao.TransactionDAO;
+import entities.Compte;
+import entities.CompteCourant;
+import entities.CompteEpargne;
 import entities.Transaction;
 import entities.enums.TransactionType;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDAOImpl implements TransactionDAO {
@@ -48,12 +52,34 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     @Override
-    public Transaction findById(String id) {
+    public List<Transaction> findByIdClient(String id) {
         return null;
     }
 
     @Override
     public List<Transaction> findByCompte(String idCompte) {
+        String sql = "SELECT * FROM transaction WHERE idCompte = ?";
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, idCompte);
+            ResultSet rs = st.executeQuery();
+
+            List<Transaction> transactions = new ArrayList<>();
+            while (rs.next()) {
+                Transaction transaction = new Transaction(
+                        rs.getString("id"),
+                        rs.getTimestamp("datetransaction").toLocalDateTime(),
+                        rs.getDouble("montant"),
+                        TransactionType.valueOf(rs.getString("typetransaction")),
+                        rs.getString("lieu"),
+                        rs.getString("idcompte"),
+                        rs.getString("reciever_id")
+                );
+                transactions.add(transaction);
+            }
+            return transactions;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return List.of();
     }
 }

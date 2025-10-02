@@ -112,7 +112,7 @@ public class Menu {
             case 1 -> versement();
             case 2 -> retrait();
             case 3 -> virement();
-            case 4 -> System.out.println("[Lister les transactions]");
+            case 4 -> listAllTransactions();
             case 5 -> System.out.println("[Filtrer les transactions]");
             case 6 -> System.out.println("[Regrouper transactions]");
             case 7 -> System.out.println("[Calculer moyenne / total]");
@@ -541,5 +541,27 @@ public class Menu {
         String lieu = scanner.nextLine();
 
         transactionService.virement(senderNumero, recieverNumero, montant, lieu);
+    }
+
+    static void listAllTransactions() {
+        System.out.println("Lister transactions par:");
+        System.out.println("1. Compte");
+        System.out.println("2. Client");
+        int choix = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choix == 1) {
+            System.out.print("Entrer l'ID du compte: ");
+            String idCompte = scanner.nextLine();
+            transactionService.listTransactionsByCompte(idCompte)
+                    .forEach(System.out::println);
+        } else if (choix == 2) {
+            System.out.print("Entrer l'ID du client: ");
+            String idClient = scanner.nextLine();
+            transactionService.listTransactionsByClient(idClient)
+                    .forEach(System.out::println);
+        } else {
+            System.out.println("Choix invalide!");
+        }
     }
 }
