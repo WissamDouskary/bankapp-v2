@@ -9,8 +9,10 @@ import entities.Transaction;
 import entities.enums.TransactionType;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -166,5 +168,31 @@ public class TransactionService {
                 .filter(t -> lieu == null || t.lieu().equalsIgnoreCase(lieu))
                 .sorted(Comparator.comparing(Transaction::date))
                 .toList();
+    }
+
+    public Map<String, List<Transaction>> groupTransactionsByTypeOrPeriod(
+            String idCompte,
+            String groupBy
+    ) {
+        List<Transaction> transactions = transactionDAOImpl.findByCompte(idCompte);
+
+        if (groupBy.equalsIgnoreCase("type")) {
+            return transactions.stream()
+                    .collect(Collectors.groupingBy(t -> t.type().name()));
+        } else if (groupBy.equalsIgnoreCase("day")) {
+            DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            return transactions.stream()
+                    .collect(Collectors.groupingBy(t -> t.date().format(dayFormatter)));
+        } else if (groupBy.equalsIgnoreCase("month")) {
+            DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+            return transactions.stream()
+                    .collect(Collectors.groupingBy(t -> t.date().format(monthFormatter)));
+        } else if (groupBy.equalsIgnoreCase("year")) {
+            DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");
+            return transactions.stream()
+                    .collect(Collectors.groupingBy(t -> t.date().format(yearFormatter)));
+        } else {
+            throw new IllegalArgumentException("Invalid groupBy option");
+        }
     }
 }

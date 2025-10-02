@@ -115,7 +115,7 @@ public class Menu {
             case 3 -> virement();
             case 4 -> listAllTransactions();
             case 5 -> filterTransactionsMenuSimple();
-            case 6 -> System.out.println("[Regrouper transactions]");
+            case 6 -> groupTransactionsMenu();
             case 7 -> System.out.println("[Calculer moyenne / total]");
             case 8 -> System.out.println("[Détecter transactions suspectes]");
             case 0 -> System.out.println("Retour au menu principal");
@@ -600,5 +600,24 @@ public class Menu {
         System.out.println("Transactions filtrées ====================");
         filtered.forEach(System.out::println);
         System.out.println("=========================================");
+    }
+
+    static void groupTransactionsMenu() {
+        System.out.print("Entrer ID du compte: ");
+        String idCompte = scanner.nextLine();
+
+        System.out.print("Regrouper par (type / day / month / year): ");
+        String groupBy = scanner.nextLine();
+
+        try {
+            Map<String, List<Transaction>> grouped = transactionService.groupTransactionsByTypeOrPeriod(idCompte, groupBy);
+
+            grouped.forEach((key, list) -> {
+                System.out.println("\n=== " + key + " ===");
+                list.forEach(System.out::println);
+            });
+        } catch (IllegalArgumentException e) {
+            System.out.println("Option invalide pour regroupement !");
+        }
     }
 }
