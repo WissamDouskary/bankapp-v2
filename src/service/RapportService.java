@@ -99,9 +99,9 @@ public class RapportService {
         double soldeMoyen = nombreComptes > 0 ? soldeTotal / nombreComptes : 0;
 
         System.out.println("=== Informations générales ===");
-        System.out.println("Nombre de clients : " + nombreClients);
-        System.out.println("Nombre de comptes : " + nombreComptes);
-        System.out.println("Solde total : " + soldeTotal);
+        System.out.println("Nombre de clients      : " + nombreClients);
+        System.out.println("Nombre de comptes      : " + nombreComptes);
+        System.out.println("Solde total            : " + soldeTotal);
         System.out.println("Solde moyen par compte : " + soldeMoyen);
         System.out.println("==============================");
     }

@@ -681,10 +681,10 @@ public class Menu {
     }
 
     static void rapportMonsuel(){
-        System.out.println("Entrer le mois :");
+        System.out.println("Entrer le mois : ");
         int mois = nomberChecker.lireEntier(scanner);
 
-        System.out.println("Entrer l'annee :");
+        System.out.println("Entrer l'annee : ");
         int anner = nomberChecker.lireEntier(scanner);
 
         rapportService.rapportMensuel(mois, anner);
