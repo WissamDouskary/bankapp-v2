@@ -4,6 +4,7 @@ import entities.*;
 import entities.enums.TransactionType;
 import service.ClientService;
 import service.CompteService;
+import service.RapportService;
 import service.TransactionService;
 import util.NomberChecker;
 
@@ -17,6 +18,7 @@ public class Menu {
     private static ClientService clientService = new ClientService();
     private static CompteService compteService = new CompteService();
     private static TransactionService transactionService = new TransactionService();
+    private static RapportService rapportService = new RapportService();
 
     public void afficherMenuPrincipal() {
         int choix;
@@ -129,16 +131,14 @@ public class Menu {
         System.out.println("1. Top 5 clients par solde");
         System.out.println("2. Rapport mensuel (transactions par type et volume total)");
         System.out.println("3. Comptes inactifs");
-        System.out.println("4. Transactions suspectes");
         System.out.println("0. Retour au menu principal");
         System.out.print("Votre choix: ");
         int choix = nomberChecker.lireEntier(scanner);
 
         switch (choix) {
-            case 1 -> System.out.println("[Top 5 clients par solde]");
-            case 2 -> System.out.println("[Rapport mensuel]");
-            case 3 -> System.out.println("[Comptes inactifs]");
-            case 4 -> System.out.println("[Transactions suspectes]");
+            case 1 -> top5clientParSolde();
+//            case 2 -> rapportMonsuel();
+//            case 3 -> comptesInactifs();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
         }
@@ -154,8 +154,8 @@ public class Menu {
         int choix = nomberChecker.lireEntier(scanner);
 
         switch (choix) {
-            case 1 -> System.out.println("[Alerte solde bas]");
-            case 2 -> System.out.println("[Alerte inactivité prolongée]");
+//            case 1 -> alertSoldeBas();
+//            case 2 -> alertInactivite();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
         }
@@ -670,5 +670,11 @@ public class Menu {
             suspicious.forEach(System.out::println);
         }
         System.out.println("==========================================");
+    }
+
+    static void top5clientParSolde(){
+        List<Client> top5 = rapportService.top5ClientsBySolde();
+        System.out.println("=== Top 5 clients par solde ===");
+        top5.forEach(System.out::println);
     }
 }
