@@ -138,8 +138,8 @@ public class Menu {
 
         switch (choix) {
             case 1 -> top5clientParSolde();
-//            case 2 -> rapportMonsuel();
-//            case 3 -> comptesInactifs();
+            case 2 -> rapportMonsuel();
+//          case 3 -> comptesInactifs();
             case 4 -> rapportService.informationsGenerales();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
@@ -678,5 +678,15 @@ public class Menu {
         List<Client> top5 = rapportService.top5ClientsBySolde();
         System.out.println("=== Top 5 clients par solde ===");
         top5.forEach(System.out::println);
+    }
+
+    static void rapportMonsuel(){
+        System.out.println("Entrer le mois :");
+        int mois = nomberChecker.lireEntier(scanner);
+
+        System.out.println("Entrer l'annee :");
+        int anner = nomberChecker.lireEntier(scanner);
+
+        rapportService.rapportMensuel(mois, anner);
     }
 }
