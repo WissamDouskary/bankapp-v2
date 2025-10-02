@@ -139,7 +139,7 @@ public class Menu {
         switch (choix) {
             case 1 -> top5clientParSolde();
             case 2 -> rapportMonsuel();
-//          case 3 -> comptesInactifs();
+            case 3 -> comptesInactifs();
             case 4 -> rapportService.informationsGenerales();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
@@ -156,8 +156,8 @@ public class Menu {
         int choix = nomberChecker.lireEntier(scanner);
 
         switch (choix) {
-//            case 1 -> alertSoldeBas();
-//            case 2 -> alertInactivite();
+            case 1 -> alertSoldeBas();
+            case 2 -> alertInactivite();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println("Choix invalide.");
         }
@@ -652,6 +652,7 @@ public class Menu {
         }
     }
 
+    //rapport methods
     static void detectSuspiciousMenu() {
         System.out.print("Entrer ID du compte: ");
         String idCompte = scanner.nextLine();
@@ -688,5 +689,23 @@ public class Menu {
         int anner = nomberChecker.lireEntier(scanner);
 
         rapportService.rapportMensuel(mois, anner);
+    }
+
+    static void comptesInactifs(){
+        List<Compte> inactifs = rapportService.comptesInactifs(LocalDateTime.now().minusMonths(6));
+        System.out.println("=== Comptes inactifs depuis 6 mois ===");
+        inactifs.forEach(System.out::println);
+    }
+
+    static void alertSoldeBas(){
+        List<Compte> basSolde = rapportService.alertSoldeBas(500);
+        System.out.println("=== Comptes avec solde bas ===");
+        basSolde.forEach(System.out::println);
+    }
+
+    static void alertInactivite(){
+        List<Compte> inactifs = rapportService.alertInactivite(LocalDateTime.now().minusMonths(6));
+        System.out.println("=== Comptes inactifs depuis 6 mois ===");
+        inactifs.forEach(System.out::println);
     }
 }
