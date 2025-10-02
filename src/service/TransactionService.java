@@ -8,12 +8,10 @@ import entities.CompteEpargne;
 import entities.Transaction;
 import entities.enums.TransactionType;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TransactionService {
@@ -226,5 +224,42 @@ public class TransactionService {
                 .mapToDouble(Transaction::montant)
                 .average()
                 .orElse(0);
+    }
+
+    public List<Transaction> detectSuspiciousTransactions(
+            String idCompte,
+            double montantSeuil,
+            String paysHabituel
+    ) {
+        List<Transaction> transactions = transactionDAOImpl.findByCompte(idCompte);
+        List<Transaction> suspicious = new ArrayList<>();
+
+        LocalDateTime lastTime = null;
+
+        for (Transaction t : transactions) {
+            boolean isSuspicious = false;
+
+            if (t.montant() > montantSeuil) {
+                isSuspicious = true;
+            }
+
+            if (!t.lieu().equalsIgnoreCase(paysHabituel)) {
+                isSuspicious = true;
+            }
+
+            if (lastTime != null) {
+                long secondsDiff = Duration.between(lastTime, t.date()).getSeconds();
+                if (secondsDiff < 60) {
+                    isSuspicious = true;
+                }
+            }
+            lastTime = t.date();
+
+            if (isSuspicious && !suspicious.contains(t)) {
+                suspicious.add(t);
+            }
+        }
+
+        return suspicious;
     }
 }

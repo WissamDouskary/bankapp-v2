@@ -116,8 +116,8 @@ public class Menu {
             case 4 -> listAllTransactions();
             case 5 -> filterTransactionsMenuSimple();
             case 6 -> groupTransactionsMenu();
-            case 7 ->  transactionStatsMenu();
-            case 8 -> System.out.println("[Détecter transactions suspectes]");
+            case 7 -> transactionStatsMenu();
+            case 8 -> detectSuspiciousMenu();
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println(" Choix invalide.");
         }
@@ -648,5 +648,27 @@ public class Menu {
         } else {
             System.out.println("Choix invalide !");
         }
+    }
+
+    static void detectSuspiciousMenu() {
+        System.out.print("Entrer ID du compte: ");
+        String idCompte = scanner.nextLine();
+
+        System.out.print("Seuil de montant (€): ");
+        double montantSeuil = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.print("Pays habituel: ");
+        String paysHabituel = scanner.nextLine();
+
+        List<Transaction> suspicious = transactionService.detectSuspiciousTransactions(idCompte, montantSeuil, paysHabituel);
+
+        System.out.println("Transactions suspectes ====================");
+        if(suspicious.isEmpty()) {
+            System.out.println("Aucune transaction suspecte trouvée !");
+        } else {
+            suspicious.forEach(System.out::println);
+        }
+        System.out.println("==========================================");
     }
 }
