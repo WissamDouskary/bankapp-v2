@@ -7,6 +7,7 @@ import service.CompteService;
 import service.TransactionService;
 import util.NomberChecker;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Menu {
@@ -113,7 +114,7 @@ public class Menu {
             case 2 -> retrait();
             case 3 -> virement();
             case 4 -> listAllTransactions();
-            case 5 -> System.out.println("[Filtrer les transactions]");
+            case 5 -> filterTransactionsMenuSimple();
             case 6 -> System.out.println("[Regrouper transactions]");
             case 7 -> System.out.println("[Calculer moyenne / total]");
             case 8 -> System.out.println("[Détecter transactions suspectes]");
@@ -563,5 +564,41 @@ public class Menu {
         } else {
             System.out.println("Choix invalide!");
         }
+    }
+
+    static void filterTransactionsMenuSimple() {
+        System.out.print("Entrer ID du compte: ");
+        String idCompte = scanner.nextLine();
+
+        System.out.print("Montant minimum (0 si aucun): ");
+        double montantMin = scanner.nextDouble();
+
+        System.out.print("Montant maximum (0 si aucun): ");
+        double montantMax = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.print("Type (RETRAIT, VERSEMENT, VIREMENT) ou vide: ");
+        String typeStr = scanner.nextLine();
+        TransactionType type = typeStr.isBlank() ? null : TransactionType.valueOf(typeStr.toUpperCase());
+
+        System.out.print("Date début (yyyy-MM-ddTHH:mm) ou vide: ");
+        String dateFromStr = scanner.nextLine();
+        LocalDateTime dateFrom = dateFromStr.isBlank() ? null : LocalDateTime.parse(dateFromStr);
+
+        System.out.print("Date fin (yyyy-MM-ddTHH:mm) ou vide: ");
+        String dateToStr = scanner.nextLine();
+        LocalDateTime dateTo = dateToStr.isBlank() ? null : LocalDateTime.parse(dateToStr);
+
+        System.out.print("Lieu ou vide: ");
+        String lieuStr = scanner.nextLine();
+        String lieu = lieuStr.isBlank() ? null : lieuStr;
+
+        List<Transaction> filtered = transactionService.filterTransactionsSimple(
+                idCompte, montantMin, montantMax, type, dateFrom, dateTo, lieu
+        );
+
+        System.out.println("Transactions filtrées ====================");
+        filtered.forEach(System.out::println);
+        System.out.println("=========================================");
     }
 }

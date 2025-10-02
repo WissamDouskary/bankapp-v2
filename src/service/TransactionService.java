@@ -8,9 +8,11 @@ import entities.CompteEpargne;
 import entities.Transaction;
 import entities.enums.TransactionType;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TransactionService {
     private TransactionDAOImpl transactionDAOImpl = new TransactionDAOImpl();
@@ -142,6 +144,27 @@ public class TransactionService {
         return transactionDAOImpl.findByIdClient(idClient)
                 .stream()
                 .sorted(Comparator.comparing(Transaction::date).reversed())
+                .toList();
+    }
+
+    public List<Transaction> filterTransactionsSimple(
+            String idCompte,
+            double montantMin,
+            double montantMax,
+            TransactionType type,
+            LocalDateTime dateFrom,
+            LocalDateTime dateTo,
+            String lieu
+    ) {
+        return transactionDAOImpl.findByCompte(idCompte)
+                .stream()
+                .filter(t -> montantMin <= 0 || t.montant() >= montantMin)
+                .filter(t -> montantMax <= 0 || t.montant() <= montantMax)
+                .filter(t -> type == null || t.type() == type)
+                .filter(t -> dateFrom == null || !t.date().isBefore(dateFrom))
+                .filter(t -> dateTo == null || !t.date().isAfter(dateTo))
+                .filter(t -> lieu == null || t.lieu().equalsIgnoreCase(lieu))
+                .sorted(Comparator.comparing(Transaction::date))
                 .toList();
     }
 }
