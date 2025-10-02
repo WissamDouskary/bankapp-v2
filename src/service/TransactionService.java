@@ -195,4 +195,36 @@ public class TransactionService {
             throw new IllegalArgumentException("Invalid groupBy option");
         }
     }
+
+    public double totalTransactionsByCompte(String idCompte) {
+        List<Transaction> transactions = transactionDAOImpl.findByCompte(idCompte);
+        return transactions.stream()
+                .mapToDouble(Transaction::montant)
+                .sum();
+    }
+
+    public double averageTransactionsByCompte(String idCompte) {
+        List<Transaction> transactions = transactionDAOImpl.findByCompte(idCompte);
+        return transactions.stream()
+                .mapToDouble(Transaction::montant)
+                .average()
+                .orElse(0);
+    }
+
+    public double totalTransactionsByClient(String idClient) {
+        List<Compte> comptes = compteService.findByClientId(idClient);
+        return comptes.stream()
+                .flatMap(c -> transactionDAOImpl.findByCompte(c.getId()).stream())
+                .mapToDouble(Transaction::montant)
+                .sum();
+    }
+
+    public double averageTransactionsByClient(String idClient) {
+        List<Compte> comptes = compteService.findByClientId(idClient);
+        return comptes.stream()
+                .flatMap(c -> transactionDAOImpl.findByCompte(c.getId()).stream())
+                .mapToDouble(Transaction::montant)
+                .average()
+                .orElse(0);
+    }
 }

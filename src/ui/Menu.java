@@ -116,7 +116,7 @@ public class Menu {
             case 4 -> listAllTransactions();
             case 5 -> filterTransactionsMenuSimple();
             case 6 -> groupTransactionsMenu();
-            case 7 -> System.out.println("[Calculer moyenne / total]");
+            case 7 ->  transactionStatsMenu();
             case 8 -> System.out.println("[Détecter transactions suspectes]");
             case 0 -> System.out.println("Retour au menu principal");
             default -> System.out.println(" Choix invalide.");
@@ -618,6 +618,35 @@ public class Menu {
             });
         } catch (IllegalArgumentException e) {
             System.out.println("Option invalide pour regroupement !");
+        }
+    }
+
+    static void transactionStatsMenu() {
+        System.out.print("Voulez-vous calculer pour un compte ou un client ? (compte/client): ");
+        String choice = scanner.nextLine();
+
+        if(choice.equalsIgnoreCase("compte")) {
+            System.out.print("Entrer ID du compte: ");
+            String idCompte = scanner.nextLine();
+
+            double total = transactionService.totalTransactionsByCompte(idCompte);
+            double avg = transactionService.averageTransactionsByCompte(idCompte);
+
+            System.out.println("Total des transactions: " + total);
+            System.out.println("Moyenne des transactions: " + avg);
+
+        } else if(choice.equalsIgnoreCase("client")) {
+            System.out.print("Entrer ID du client: ");
+            String idClient = scanner.nextLine();
+
+            double total = transactionService.totalTransactionsByClient(idClient);
+            double avg = transactionService.averageTransactionsByClient(idClient);
+
+            System.out.println("Total des transactions du client: " + total);
+            System.out.println("Moyenne des transactions du client: " + avg);
+
+        } else {
+            System.out.println("Choix invalide !");
         }
     }
 }
