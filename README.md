@@ -520,8 +520,9 @@ java -jar BanqueAlBaraka.jar
 6. Quitter
 ```
 
-## Planification
-<img width="1595" height="856" alt="image" src="https://github.com/user-attachments/assets/6c211b4a-84fc-4d5d-982d-289ec270ee8b" />
+## Class Diagram
+<img width="1556" height="754" alt="image" src="https://github.com/user-attachments/assets/28002485-7f31-4743-a48c-e3d72c0dcf6f" />
+
 
 ## 👨‍💻 Auteur
 
