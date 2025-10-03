@@ -658,14 +658,7 @@ public class Menu {
         System.out.print("Entrer ID du compte: ");
         String idCompte = scanner.nextLine();
 
-        System.out.print("Seuil de montant (€): ");
-        double montantSeuil = scanner.nextDouble();
-        scanner.nextLine();
-
-        System.out.print("Pays habituel: ");
-        String paysHabituel = scanner.nextLine();
-
-        List<Transaction> suspicious = transactionService.detectSuspiciousTransactions(idCompte, montantSeuil, paysHabituel);
+        List<Transaction> suspicious = transactionService.detectSuspiciousByPlace(idCompte);
 
         System.out.println("Transactions suspectes ====================");
         if(suspicious.isEmpty()) {

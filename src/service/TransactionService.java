@@ -230,42 +230,31 @@ public class TransactionService {
                 .orElse(0);
     }
 
-    public List<Transaction> detectSuspiciousTransactions(
-            String idCompte,
-            double montantSeuil,
-            String paysHabituel
-    ) {
+    public List<Transaction> detectSuspiciousByPlace(String idCompte) {
         List<Transaction> transactions = transactionDAOImpl.findByCompte(idCompte);
         List<Transaction> suspicious = new ArrayList<>();
 
-        LocalDateTime lastTime = null;
+        if (transactions.isEmpty()) return suspicious;
+
+        Map<String, Long> placeCount = transactions.stream()
+                .collect(Collectors.groupingBy(Transaction::lieu, Collectors.counting()));
+
+        long maxCount = placeCount.values().stream().max(Long::compare).orElse(0L);
+
+        Set<String> usualPlaces = placeCount.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxCount)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
 
         for (Transaction t : transactions) {
-            boolean isSuspicious = false;
-
-            if (t.montant() > montantSeuil) {
-                isSuspicious = true;
-            }
-
-            if (!t.lieu().equalsIgnoreCase(paysHabituel)) {
-                isSuspicious = true;
-            }
-
-            if (lastTime != null) {
-                long secondsDiff = Duration.between(lastTime, t.date()).getSeconds();
-                if (secondsDiff < 60) {
-                    isSuspicious = true;
-                }
-            }
-            lastTime = t.date();
-
-            if (isSuspicious && !suspicious.contains(t)) {
+            if (!usualPlaces.contains(t.lieu())) {
                 suspicious.add(t);
             }
         }
 
         return suspicious;
     }
+
 
     public List<Transaction> findByCompte(String compteId) {
         return transactionDAOImpl.findByCompte(compteId);
