@@ -2,6 +2,7 @@ package ui;
 
 import entities.*;
 import entities.enums.TransactionType;
+import org.w3c.dom.ls.LSOutput;
 import service.ClientService;
 import service.CompteService;
 import service.RapportService;
@@ -698,14 +699,17 @@ public class Menu {
     }
 
     static void alertSoldeBas(){
-        List<Compte> basSolde = rapportService.alertSoldeBas(500);
-        System.out.println("=== Comptes avec solde bas ===");
-        basSolde.forEach(System.out::println);
+        System.out.println("Entrer le seuil de solde: ");
+        int seuilSolde = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
+
+        rapportService.alerteSoldeBas(seuilSolde);
     }
 
     static void alertInactivite(){
-        List<Compte> inactifs = rapportService.alertInactivite(LocalDateTime.now().minusMonths(6));
-        System.out.println("=== Comptes inactifs depuis 6 mois ===");
-        inactifs.forEach(System.out::println);
+        System.out.println("Entrer le combien de mois inactive :");
+        int mois = nomberChecker.lireEntier(scanner);
+        scanner.nextLine();
+        rapportService.alerteInactivite(mois);
     }
 }

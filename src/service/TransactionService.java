@@ -63,6 +63,10 @@ public class TransactionService {
             }
         }
 
+        if (compte.getSolde() < 200) {
+            System.out.println("Alerte: Votre solde est bas (" + compte.getSolde() + ")");
+        }
+
         Transaction transaction = new Transaction(
                 montant,
                 TransactionType.RETRAIT,
@@ -261,5 +265,9 @@ public class TransactionService {
         }
 
         return suspicious;
+    }
+
+    public List<Transaction> findByCompte(String compteId) {
+        return transactionDAOImpl.findByCompte(compteId);
     }
 }

@@ -7,6 +7,7 @@ import entities.Transaction;
 import entities.enums.TransactionType;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,14 +80,40 @@ public class RapportService {
         return inactifs;
     }
 
-    public List<Compte> alertSoldeBas(double seuil) {
-        return compteService.findAll().stream()
-                .filter(c -> c.getSolde() < seuil)
-                .toList();
+    public void alerteSoldeBas(double seuil) {
+        List<Compte> comptes = compteService.findAll();
+        System.out.println("=== Alertes: Solde bas (< " + seuil + ") ===");
+        for (Compte c : comptes) {
+            if (c.getSolde() < seuil) {
+                System.out.println("Compte " + c.getId() + " - Client: " + c.getIdClient() + " | Solde: " + c.getSolde());
+            }
+        }
+        System.out.println("==========================================");
     }
 
-    public List<Compte> alertInactivite(LocalDateTime depuis) {
-        return comptesInactifs(depuis);
+    public void alerteInactivite(int moisInactifs) {
+        List<Compte> comptes = compteService.findAll();
+        LocalDateTime now = LocalDateTime.now();
+
+        System.out.println("=== Alertes: Inactivité prolongée (> " + moisInactifs + " mois) ===");
+
+        for (Compte c : comptes) {
+            List<Transaction> txs = transactionService.findByCompte(c.getId());
+
+            LocalDateTime lastTxDate = txs.isEmpty() ? null :
+                    txs.stream().map(Transaction::date).max(LocalDateTime::compareTo).orElse(null);
+
+            if (lastTxDate == null) {
+                System.out.println("Compte " + c.getId() + " - Client: " + c.getIdClient() + " | Jamais utilisé");
+            } else {
+                long diffMonths = ChronoUnit.MONTHS.between(lastTxDate, now);
+                if (diffMonths >= moisInactifs) {
+                    System.out.println("Compte " + c.getId() + " - Client: " + c.getIdClient()
+                            + " | Dernière transaction: " + lastTxDate);
+                }
+            }
+        }
+        System.out.println("=================================================");
     }
 
     public void informationsGenerales() {
