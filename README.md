@@ -520,6 +520,9 @@ java -jar BanqueAlBaraka.jar
 6. Quitter
 ```
 
+## Planification
+<img width="1595" height="856" alt="image" src="https://github.com/user-attachments/assets/6c211b4a-84fc-4d5d-982d-289ec270ee8b" />
+
 ## 👨‍💻 Auteur
 
 Développé par **Wissam** pour **Banque App**
